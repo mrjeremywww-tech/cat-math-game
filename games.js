@@ -9,87 +9,87 @@ let stars = 0;
 let totalStars = 0;
 let totalTreats = 0;
 
-// Game Data
+// Game Data - Cambridge Maths Grade 1 Units
 const gamesData = {
     1: {
-        title: "Counting Fun!",
+        title: "Numbers to 10!",
         instruction: "Count the objects and choose the right number!",
         generator: generateCountingGame
     },
     2: {
-        title: "Addition Adventure!",
-        instruction: "Add the numbers together!",
-        generator: generateAdditionGame
-    },
-    3: {
-        title: "Subtraction Safari!",
-        instruction: "Subtract the smaller number from the bigger one!",
-        generator: generateSubtractionGame
-    },
-    4: {
-        title: "Number Sequences!",
-        instruction: "What number comes next in the pattern?",
-        generator: generateSequenceGame
-    },
-    5: {
-        title: "Even or Odd?",
-        instruction: "Is the number even (divisible by 2) or odd?",
-        generator: generateEvenOddGame
-    },
-    6: {
-        title: "Greater or Less?",
-        instruction: "Compare the two numbers!",
-        generator: generateComparisonGame
-    },
-    7: {
-        title: "Addition with Pictures!",
-        instruction: "Count the items and add them!",
-        generator: generatePictureAdditionGame
-    },
-    8: {
-        title: "Subtraction with Pictures!",
-        instruction: "Count the items and subtract!",
-        generator: generatePictureSubtractionGame
-    },
-    9: {
-        title: "Make 10!",
-        instruction: "What number plus this one equals 10?",
-        generator: generateNumberBondsGame
-    },
-    10: {
-        title: "Doubles!",
-        instruction: "Add the same number to itself!",
-        generator: generateDoublesGame
-    },
-    11: {
-        title: "Shape Detective!",
-        instruction: "Click on the correct shape!",
+        title: "Geometry 1 - Shapes!",
+        instruction: "Click on the correct 2D or 3D shape!",
         generator: generateShapesGame
     },
-    12: {
-        title: "Pattern Party!",
-        instruction: "What comes next in the pattern?",
-        generator: generatePatternsGame
+    3: {
+        title: "Fractions 1!",
+        instruction: "Which shape shows one half?",
+        generator: generateFractionsGame
     },
-    13: {
-        title: "Word Problems!",
-        instruction: "Read the story and solve the problem!",
-        generator: generateWordProblemGame
+    4: {
+        title: "Length!",
+        instruction: "Compare the lengths! Which is longer/shorter?",
+        generator: generateLengthGame
     },
-    14: {
-        title: "Money Math!",
-        instruction: "Count the coins and find the total!",
-        generator: generateMoneyGame
+    5: {
+        title: "Add & Subtract to 10!",
+        instruction: "Add or subtract the numbers!",
+        generator: generateAdditionGame
     },
-    15: {
-        title: "Time Teller!",
+    6: {
+        title: "Position!",
+        instruction: "Where is the object? Above, below, left or right?",
+        generator: generatePositionGame
+    },
+    7: {
+        title: "Sorting!",
+        instruction: "Sort the items into the correct groups!",
+        generator: generateSortingGame
+    },
+    8: {
+        title: "Time 1 - O'Clock!",
         instruction: "What time is shown on the clock?",
         generator: generateTimeGame
     },
+    9: {
+        title: "Numbers to 20!",
+        instruction: "Count and compare numbers to 20!",
+        generator: generateNumbersTo20Game
+    },
+    10: {
+        title: "Geometry 2 - More Shapes!",
+        instruction: "Find shapes with specific properties!",
+        generator: generateAdvancedShapesGame
+    },
+    11: {
+        title: "Fractions 2 - Halves!",
+        instruction: "Find one half of the shape or number!",
+        generator: generateHalvesGame
+    },
+    12: {
+        title: "Mass & Capacity!",
+        instruction: "Compare weight and capacity!",
+        generator: generateMassCapacityGame
+    },
+    13: {
+        title: "Money & Calculation!",
+        instruction: "Count coins and solve money problems!",
+        generator: generateMoneyGame
+    },
+    14: {
+        title: "Graphs & Charts!",
+        instruction: "Read the graph and answer questions!",
+        generator: generateGraphsGame
+    },
+    15: {
+        title: "Time 2 - Half Past!",
+        instruction: "Tell time to the half hour!",
+        generator: generateTimeAdvancedGame
+    },
     16: {
-        title: "Final Challenge!",
-        instruction: "Test everything you've learned!",
-        generator: generateChallengeGame
+        title: "Patterns & Direction!",
+        instruction: "Continue patterns and follow directions!",
+        generator: generatePatternsDirectionGame
     }
 };
 
@@ -677,6 +677,261 @@ function generateTimeGame(container) {
     });
     html += '</div>';
     
+    container.innerHTML = html;
+}
+
+// Unit 3: Fractions 1
+function generateFractionsGame(container) {
+    const shapes = [
+        { name: 'circle', halves: true, svg: '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#FF8C42" stroke="#2D2D2D" stroke-width="3"/><line x1="50" y1="5" x2="50" y2="95" stroke="#2D2D2D" stroke-width="3"/></svg>' },
+        { name: 'circle', halves: false, svg: '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#FF8C42" stroke="#2D2D2D" stroke-width="3"/></svg>' },
+        { name: 'square', halves: true, svg: '<svg viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" fill="#42A5F5" stroke="#2D2D2D" stroke-width="3"/><line x1="50" y1="10" x2="50" y2="90" stroke="#2D2D2D" stroke-width="3"/></svg>' },
+        { name: 'square', halves: false, svg: '<svg viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" fill="#42A5F5" stroke="#2D2D2D" stroke-width="3"/></svg>' }
+    ];
+    
+    const shuffled = shuffleArray([...shapes]);
+    let html = '<p style="text-align: center; margin-bottom: 20px; font-size: 14px;">Which shape shows <strong>one half</strong>?</p>';
+    html += '<div class="shape-display">';
+    shuffled.forEach((shape, index) => {
+        html += `<div class="shape-item" onclick="checkAnswer(${shape.halves}, true, this)">${shape.svg}</div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Unit 4: Length
+function generateLengthGame(container) {
+    const items = [
+        { name: 'pencil', emoji: '✏️', length: 3 },
+        { name: 'ruler', emoji: '📏', length: 5 },
+        { name: 'book', emoji: '📕', length: 4 },
+        { name: 'snake', emoji: '🐍', length: 6 }
+    ];
+    const target = items[getRandomInt(0, items.length - 1)];
+    const isLonger = Math.random() > 0.5;
+    
+    let html = `<p style="text-align: center; margin-bottom: 20px; font-size: 14px;">The ${target.name} is ${target.length} blocks long. Which is ${isLonger ? 'LONGER' : 'SHORTER'}?</p>`;
+    html += '<div class="shape-display">';
+    items.forEach(item => {
+        let blocks = '';
+        for (let i = 0; i < item.length; i++) blocks += '█';
+        const isCorrect = isLonger ? item.length > target.length : item.length < target.length;
+        html += `<div class="length-item" onclick="checkAnswer(${isCorrect}, true, this)"><div style="font-size: 24px;">${item.emoji}</div><div style="font-size: 12px; color: #666;">${blocks}</div></div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Unit 6: Position
+function generatePositionGame(container) {
+    const positions = [
+        { word: 'ABOVE', emoji: '☁️', answer: 'above' },
+        { word: 'BELOW', emoji: '🌱', answer: 'below' },
+        { word: 'LEFT', emoji: '👈', answer: 'left' },
+        { word: 'RIGHT', emoji: '👉', answer: 'right' }
+    ];
+    const target = positions[getRandomInt(0, positions.length - 1)];
+    const shuffled = shuffleArray([...positions]);
+    
+    let html = '<div style="text-align: center; margin: 20px 0;">';
+    html += '<div style="font-size: 40px;">🐱</div>';
+    html += `<div style="font-size: 30px; margin: 10px;">${target.emoji}</div>`;
+    html += '</div>';
+    html += `<p style="text-align: center; font-size: 14px;">Where is the ${target.emoji}?</p>`;
+    html += '<div class="answer-grid">';
+    shuffled.forEach(pos => {
+        html += `<button class="answer-btn" onclick="checkAnswer('${pos.answer}', '${target.answer}', this)">${pos.word}</button>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Unit 7: Sorting
+function generateSortingGame(container) {
+    const categories = [
+        { name: 'Animals', items: ['🐱', '🐶', '🐭', '🐰'] },
+        { name: 'Fruits', items: ['🍎', '🍌', '🍊', '🍇'] },
+        { name: 'Shapes', items: ['🔴', '🔷', '🔺', '⭐'] }
+    ];
+    const targetCat = categories[getRandomInt(0, categories.length - 1)];
+    const wrongItem = categories[(categories.indexOf(targetCat) + 1) % categories.length].items[0];
+    const items = shuffleArray([...targetCat.items, wrongItem]);
+    
+    let html = `<p style="text-align: center; margin-bottom: 20px; font-size: 14px;">Find the item that does NOT belong with <strong>${targetCat.name}</strong>!</p>`;
+    html += '<div class="shape-display">';
+    items.forEach(item => {
+        const isWrong = item === wrongItem;
+        html += `<div class="shape-item" style="font-size: 40px;" onclick="checkAnswer(${isWrong}, true, this)">${item}</div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Unit 9: Numbers to 20
+function generateNumbersTo20Game(container) {
+    const num1 = getRandomInt(10, 20);
+    const num2 = getRandomInt(10, 20);
+    const answer = Math.max(num1, num2);
+    
+    let html = '<div class="number-display">';
+    html += `<div class="big-number">${num1}</div>`;
+    html += `<div style="font-size: 24px;">vs</div>`;
+    html += `<div class="big-number">${num2}</div>`;
+    html += '</div>';
+    html += '<p style="text-align: center; font-size: 14px;">Which number is BIGGER?</p>';
+    html += '<div class="answer-grid">';
+    [num1, num2].forEach(num => {
+        html += `<button class="answer-btn" onclick="checkAnswer(${num}, ${answer}, this)">${num}</button>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Unit 10: Geometry 2 - Advanced Shapes
+function generateAdvancedShapesGame(container) {
+    const shapes = [
+        { name: 'circle', color: '#FF8C42', round: true, corners: 0 },
+        { name: 'square', color: '#42A5F5', round: false, corners: 4 },
+        { name: 'triangle', color: '#66BB6A', round: false, corners: 3 },
+        { name: 'rectangle', color: '#AB47BC', round: false, corners: 4 }
+    ];
+    const properties = ['round', 'corners'];
+    const property = properties[getRandomInt(0, 1)];
+    const targetShape = shapes[getRandomInt(0, shapes.length - 1)];
+    
+    let question = '';
+    let answer = '';
+    if (property === 'round') {
+        question = targetShape.round ? 'Which shape is ROUND?' : 'Which shape has CORNERS?';
+        answer = targetShape.round ? 'round' : 'corners';
+    } else {
+        question = `Which shape has ${targetShape.corners} corners?`;
+    }
+    
+    let html = `<p style="text-align: center; margin-bottom: 20px; font-size: 14px;">${question}</p>`;
+    html += '<div class="shape-display">';
+    shapes.forEach(shape => {
+        let isCorrect = property === 'round' ? shape.round === targetShape.round : shape.corners === targetShape.corners;
+        let svg = '';
+        if (shape.name === 'circle') svg = `<circle cx="40" cy="40" r="35" fill="${shape.color}" stroke="#2D2D2D" stroke-width="3"/>`;
+        else if (shape.name === 'square') svg = `<rect x="10" y="10" width="60" height="60" fill="${shape.color}" stroke="#2D2D2D" stroke-width="3"/>`;
+        else if (shape.name === 'triangle') svg = `<polygon points="40,10 70,70 10,70" fill="${shape.color}" stroke="#2D2D2D" stroke-width="3"/>`;
+        else svg = `<rect x="5" y="15" width="70" height="50" fill="${shape.color}" stroke="#2D2D2D" stroke-width="3"/>`;
+        html += `<div class="shape-item" onclick="checkAnswer(${isCorrect}, true, this)"><svg viewBox="0 0 80 80">${svg}</svg></div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Unit 11: Fractions 2 - Halves
+function generateHalvesGame(container) {
+    const num = getRandomInt(2, 10) * 2;
+    const half = num / 2;
+    
+    let html = `<div style="text-align: center; font-size: 36px; margin: 20px;">${num}</div>`;
+    html += '<p style="text-align: center; font-size: 14px;">What is ONE HALF of this number?</p>';
+    html += '<div class="answer-grid">';
+    const answers = shuffleArray([half, half + 1, half - 1, num]).slice(0, 4);
+    answers.forEach(ans => {
+        html += `<button class="answer-btn" onclick="checkAnswer(${ans}, ${half}, this)">${ans}</button>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Unit 12: Mass & Capacity
+function generateMassCapacityGame(container) {
+    const items = [
+        { heavy: '🐘', light: '🐭', question: 'Which is HEAVIER?' },
+        { heavy: '📚', light: '🪶', question: 'Which is HEAVIER?' },
+        { heavy: '🪣', light: '🥛', question: 'Which holds MORE?' }
+    ];
+    const item = items[getRandomInt(0, items.length - 1)];
+    const correct = Math.random() > 0.5;
+    
+    let html = `<p style="text-align: center; margin-bottom: 20px; font-size: 14px;">${item.question}</p>`;
+    html += '<div class="shape-display">';
+    html += `<div class="shape-item" style="font-size: 50px;" onclick="checkAnswer(${correct}, true, this)">${item.heavy}</div>`;
+    html += `<div class="shape-item" style="font-size: 50px;" onclick="checkAnswer(${!correct}, true, this)">${item.light}</div>`;
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Unit 14: Graphs
+function generateGraphsGame(container) {
+    const items = ['🍎', '🍌', '🍊'];
+    const counts = [getRandomInt(1, 5), getRandomInt(1, 5), getRandomInt(1, 5)];
+    const maxItem = items[counts.indexOf(Math.max(...counts))];
+    const minItem = items[counts.indexOf(Math.min(...counts))];
+    const isMax = Math.random() > 0.5;
+    
+    let html = '<div style="display: flex; justify-content: center; gap: 20px; margin: 20px 0;">';
+    items.forEach((item, i) => {
+        html += '<div style="text-align: center;">';
+        for (let j = 0; j < counts[i]; j++) {
+            html += `<div style="font-size: 24px;">${item}</div>`;
+        }
+        html += `<div style="border-top: 3px solid #333; margin-top: 5px; font-size: 14px;">${counts[i]}</div>`;
+        html += '</div>';
+    });
+    html += '</div>';
+    html += `<p style="text-align: center; font-size: 14px;">Which fruit is ${isMax ? 'MOST' : 'LEAST'} common?</p>`;
+    html += '<div class="answer-grid">';
+    items.forEach((item, i) => {
+        const isCorrect = isMax ? item === maxItem : item === minItem;
+        html += `<button class="answer-btn" style="font-size: 30px;" onclick="checkAnswer(${isCorrect}, true, this)">${item}</button>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Unit 15: Time 2 - Half Past
+function generateTimeAdvancedGame(container) {
+    const hour = getRandomInt(1, 12);
+    const isHalfPast = Math.random() > 0.5;
+    const hourRotation = (hour % 12) * 30 + (isHalfPast ? 15 : 0);
+    const minuteRotation = isHalfPast ? 180 : 0;
+    const timeStr = isHalfPast ? `${hour}:30` : `${hour}:00`;
+    
+    let html = '<div class="clock-display">';
+    html += `<div class="clock-hand hour" style="transform: rotate(${hourRotation}deg); height: 25%;"></div>`;
+    html += `<div class="clock-hand minute" style="transform: rotate(${minuteRotation}deg);"></div>`;
+    html += '<div class="clock-center"></div>';
+    [12, 3, 6, 9].forEach(num => {
+        const pos = num === 12 ? { top: '5%', left: '50%' } : num === 3 ? { top: '50%', right: '5%' } : num === 6 ? { top: '85%', left: '50%' } : { top: '50%', left: '5%' };
+        html += `<div class="clock-number" style="top:${pos.top};left:${pos.left || 'auto'};right:${pos.right || 'auto'};transform: translate(-50%, -50%); position: absolute;">${num}</div>`;
+    });
+    html += '</div>';
+    html += '<p style="text-align: center; font-size: 14px;">What time is it?</p>';
+    html += '<div class="answer-grid">';
+    const answers = shuffleArray([timeStr, `${hour}:00`, `${hour === 1 ? 12 : hour - 1}:30`, `${(hour % 12) + 1}:00`]).slice(0, 4);
+    answers.forEach(ans => {
+        html += `<button class="answer-btn" onclick="checkAnswer('${ans}', '${timeStr}', this)">${ans}</button>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Unit 16: Patterns & Direction
+function generatePatternsDirectionGame(container) {
+    const directions = ['👆 UP', '👇 DOWN', '👈 LEFT', '👉 RIGHT'];
+    const pattern = [];
+    for (let i = 0; i < 3; i++) pattern.push(directions[getRandomInt(0, 3)]);
+    const next = directions[getRandomInt(0, 3)];
+    pattern.push(next);
+    
+    let html = '<p style="text-align: center; font-size: 14px; margin-bottom: 10px;">Follow the pattern!</p>';
+    html += '<div class="pattern-display">';
+    pattern.slice(0, 3).forEach(dir => {
+        html += `<div class="sequence-number" style="font-size: 28px;">${dir.split(' ')[0]}</div>`;
+    });
+    html += `<div class="pattern-slot">?</div>`;
+    html += '</div>';
+    html += '<div class="answer-grid">';
+    shuffleArray(directions).forEach(dir => {
+        html += `<button class="answer-btn" onclick="checkAnswer('${dir}', '${next}', this)">${dir}</button>`;
+    });
+    html += '</div>';
     container.innerHTML = html;
 }
 

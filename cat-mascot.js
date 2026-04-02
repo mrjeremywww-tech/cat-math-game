@@ -7,7 +7,7 @@ const catMessages = {
         "You're amazing! ⭐",
         "Great job! 😺",
         "You're a math star! 🌟",
-        "Whiskers is proud! 😸",
+        "ALAINA is proud! 😸",
         "Fantastic! 🎉",
         "Keep it up! 💪",
         "You got it! ✨"
@@ -30,7 +30,7 @@ const catMessages = {
         "You can do anything! 💪",
         "Ready for an adventure? 🌟",
         "Let's go! 🐾",
-        "Whiskers loves math! 😸"
+        "ALAINA loves math! 😸"
     ]
 };
 
@@ -179,6 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initial greeting
     setTimeout(() => {
-        catSay('Welcome! I\'m Whiskers! 🐱', 4000);
+        catSay('Welcome! I\'m ALAINA! 🐱', 4000);
     }, 1000);
 });
