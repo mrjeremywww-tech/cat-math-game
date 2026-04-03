@@ -12,23 +12,6 @@ let stars = 0;
 let totalStars = 0;
 let totalTreats = 0;
 
-// Question pool to prevent duplicates in same session
-let questionPool = new Set();
-
-// Utility: Generate unique question ID
-function getQuestionId(unit, type, params) {
-    return `${unit}_${type}_${params}`;
-}
-
-// Utility: Check if question was used and mark as used
-function isQuestionUsed(questionId) {
-    if (questionPool.has(questionId)) {
-        return true;
-    }
-    questionPool.add(questionId);
-    return false;
-}
-
 // Game Data - Cambridge Maths Workbook 1 Units
 const gamesData = {
     1: {
@@ -133,7 +116,6 @@ function startGame(unitNum) {
     currentQuestion = 0;
     score = 0;
     stars = 0;
-    questionPool.clear(); // Reset question pool for new game session
     
     document.getElementById('mainMenu').classList.add('hidden');
     document.getElementById('gameContainer').classList.remove('hidden');
@@ -247,7 +229,6 @@ function celebrate() {
 // 1.1 Counting sets of objects, 1.5 Odd and even numbers
 function generateUnit1_Counting(container) {
     const type = getRandomInt(1, 4);
-    let questionId, html, answers, correct;
     
     if (type === 1) {
         // Count animals (1-10) - Workbook 1.1: Elephants, birds, fish, chickens
@@ -260,20 +241,14 @@ function generateUnit1_Counting(container) {
         ];
         const animal = animals[getRandomInt(0, animals.length - 1)];
         
-        questionId = getQuestionId(1, 'count', `${animal.name}_${count}`);
-        if (isQuestionUsed(questionId)) {
-            // If used, try again with different parameters
-            return generateUnit1_Counting(container);
-        }
-        
-        html = `<p style="text-align: center; margin-bottom: 15px;">Count the ${animal.name}!</p>`;
+        let html = `<p style="text-align: center; margin-bottom: 15px;">Count the ${animal.name}!</p>`;
         html += `<div class="counting-container">`;
         for (let i = 0; i < count; i++) {
             html += `<span class="count-item" style="animation: bounce 0.5s ${i * 0.1}s; font-size: 35px;">${animal.emoji}</span>`;
         }
         html += `</div>`;
         
-        answers = shuffleArray([count, count + 1, count - 1, count + 2].filter(n => n >= 1 && n <= 10)).slice(0, 4);
+        const answers = shuffleArray([count, count + 1, count - 1, count + 2].filter(n => n >= 1 && n <= 10)).slice(0, 4);
         html += `<div class="answer-grid">`;
         answers.forEach(ans => {
             html += `<button class="answer-btn" onclick="checkAnswer(${ans}, ${count}, this)">${ans}</button>`;
@@ -283,27 +258,18 @@ function generateUnit1_Counting(container) {
         
     } else if (type === 2) {
         // Number sequence - fill in missing number
-        let attempts = 0;
-        let missing, start;
-        do {
-            missing = getRandomInt(2, 9);
-            start = getRandomInt(1, missing - 1);
-            questionId = getQuestionId(1, 'sequence', `${start}_${missing}`);
-            attempts++;
-        } while (isQuestionUsed(questionId) && attempts < 10);
+        const missing = getRandomInt(2, 9);
+        const seq = [missing - 1, missing, missing + 1];
+        const display = seq.map(n => n === missing ? '?' : n);
         
-        html = `<p style="text-align: center; margin-bottom: 15px;">What number is missing?</p>`;
+        let html = `<p style="text-align: center; margin: 20px 0;">What number is missing?</p>`;
         html += `<div class="sequence-display">`;
-        for (let i = start; i < start + 5; i++) {
-            if (i === missing) {
-                html += `<div class="sequence-number missing">?</div>`;
-            } else {
-                html += `<div class="sequence-number">${i}</div>`;
-            }
-        }
+        display.forEach(num => {
+            html += `<div class="sequence-number">${num}</div>`;
+        });
         html += `</div>`;
         
-        answers = shuffleArray([missing, missing + 1, missing - 1, missing + 2]).filter(n => n >= 1 && n <= 10).slice(0, 4);
+        const answers = shuffleArray([missing, missing + 1, missing - 1, missing + 2]).filter(n => n >= 1 && n <= 10).slice(0, 4);
         html += `<div class="answer-grid">`;
         answers.forEach(ans => {
             html += `<button class="answer-btn" onclick="checkAnswer(${ans}, ${missing}, this)">${ans}</button>`;
@@ -312,40 +278,30 @@ function generateUnit1_Counting(container) {
         container.innerHTML = html;
         
     } else if (type === 3) {
-        // Matching numerals to words - Cambridge style
-        const numWords = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
-        let num = getRandomInt(1, 10);
+        // 1.5 Odd and even numbers - Count gloves
+        const count = getRandomInt(2, 10);
+        const isOdd = count % 2 === 1;
         
-        questionId = getQuestionId(1, 'word', num);
-        if (isQuestionUsed(questionId)) {
-            return generateUnit1_Counting(container);
+        let html = `<p style="text-align: center; margin-bottom: 15px;">Count the gloves!</p>`;
+        html += `<div class="counting-container">`;
+        for (let i = 0; i < count; i++) {
+            html += `<span class="count-item" style="font-size: 35px;">🧤</span>`;
         }
+        html += `</div>`;
+        html += `<p style="text-align: center;">Is ${count} ODD or EVEN?</p>`;
         
-        correct = num;
-        
-        html = `<p style="text-align: center; margin-bottom: 15px; font-size: 24px;">Match the number:</p>`;
-        html += `<div style="text-align: center; font-size: 48px; margin: 20px; color: var(--btn-blue);">${numWords[num]}</div>`;
-        
-        answers = shuffleArray([num, num + 1, num - 1, num + 2]).filter(n => n >= 0 && n <= 10).slice(0, 4);
         html += `<div class="answer-grid">`;
-        answers.forEach(ans => {
-            html += `<button class="answer-btn" onclick="checkAnswer(${ans}, ${correct}, this)">${ans}</button>`;
-        });
+        html += `<button class="answer-btn" onclick="checkAnswer('${isOdd ? 'odd' : 'even'}', '${isOdd ? 'odd' : 'even'}', this)">${isOdd ? 'ODD' : 'EVEN'}</button>`;
+        html += `<button class="answer-btn" onclick="checkAnswer('${isOdd ? 'even' : 'odd'}', '${isOdd ? 'odd' : 'even'}', this)">${isOdd ? 'EVEN' : 'ODD'}</button>`;
         html += `</div>`;
         container.innerHTML = html;
         
     } else {
-        // Odd/Even number identification - Fixed logic
-        let attempts = 0;
-        let num, isOdd;
-        do {
-            num = getRandomInt(1, 10);
-            isOdd = num % 2 === 1;
-            questionId = getQuestionId(1, 'oddeven', num);
-            attempts++;
-        } while (isQuestionUsed(questionId) && attempts < 10);
+        // Odd/Even number identification
+        const num = getRandomInt(1, 10);
+        const isOdd = num % 2 === 1;
         
-        html = `<div style="font-size: 60px; text-align: center; margin: 20px;">${num}</div>`;
+        let html = `<div style="font-size: 60px; text-align: center; margin: 20px;">${num}</div>`;
         html += `<p style="text-align: center;">Is this number ODD or EVEN?</p>`;
         
         html += `<div class="answer-grid">`;
@@ -505,49 +461,32 @@ function generateUnit3_Fractions(container) {
 }
 
 // ===== UNIT 4: LENGTH =====
-// Uses black squares to show length without numbers
 function generateUnit4_Length(container) {
     const items = [
         { name: 'pencil', emoji: '✏️', length: 2 },
         { name: 'book', emoji: '📕', length: 3 },
         { name: 'ruler', emoji: '📏', length: 4 },
-        { name: 'snake', emoji: '🐍', length: 5 },
-        { name: 'car', emoji: '🚗', length: 3 },
-        { name: 'banana', emoji: '🍌', length: 2 },
-        { name: 'giraffe', emoji: '🦒', length: 5 },
-        { name: 'worm', emoji: '🐛', length: 2 }
+        { name: 'snake', emoji: '🐍', length: 5 }
     ];
     
-    // Try to find a unique question combination
-    let attempts = 0;
-    let idx1, idx2, item1, item2, longer, questionId;
+    const idx1 = getRandomInt(0, items.length - 1);
+    let idx2 = getRandomInt(0, items.length - 1);
+    while (idx2 === idx1) idx2 = getRandomInt(0, items.length - 1);
     
-    do {
-        idx1 = getRandomInt(0, items.length - 1);
-        idx2 = getRandomInt(0, items.length - 1);
-        while (idx2 === idx1) idx2 = getRandomInt(0, items.length - 1);
-        
-        item1 = items[idx1];
-        item2 = items[idx2];
-        longer = item1.length > item2.length ? item1 : item2;
-        
-        questionId = getQuestionId(4, 'length', `${item1.name}_${item2.name}`);
-        attempts++;
-    } while (isQuestionUsed(questionId) && attempts < 20);
+    const item1 = items[idx1];
+    const item2 = items[idx2];
+    const longer = item1.length > item2.length ? item1 : item2;
     
-    let html = `<p style="text-align: center; margin-bottom: 20px; font-size: 1.2rem;">Which is LONGER?</p>`;
+    let html = `<p style="text-align: center; margin-bottom: 20px;">Which is LONGER?</p>`;
     html += `<div class="length-compare">`;
     
     [item1, item2].forEach(item => {
-        // Create black square blocks without numbers
         let blocks = '';
-        for (let i = 0; i < item.length; i++) {
-            blocks += '<span class="length-block">▬</span>';
-        }
+        for (let i = 0; i < item.length; i++) blocks += '█';
         html += `<div class="length-item" onclick="checkAnswer('${item.name}', '${longer.name}', this)">`;
-        html += `<div style="font-size: 50px; margin-bottom: 10px;">${item.emoji}</div>`;
-        html += `<div class="length-blocks">${blocks}</div>`;
-        // No number displayed - pure visual comparison
+        html += `<div style="font-size: 40px;">${item.emoji}</div>`;
+        html += `<div style="font-size: 14px; letter-spacing: 2px;">${blocks}</div>`;
+        html += `<div style="font-size: 10px;">${item.length} blocks</div>`;
         html += `</div>`;
     });
     
