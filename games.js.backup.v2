@@ -305,8 +305,8 @@ function generateUnit1_Counting(container) {
         html += `<p style="text-align: center;">Is this number ODD or EVEN?</p>`;
         
         html += `<div class="answer-grid">`;
-        html += `<button class="answer-btn" onclick="checkAnswer('odd', '${isOdd ? 'odd' : 'even'}', this)">ODD</button>`;
-        html += `<button class="answer-btn" onclick="checkAnswer('even', '${isOdd ? 'odd' : 'even'}', this)">EVEN</button>`;
+        html += `<button class="answer-btn" onclick="checkAnswer('${isOdd ? 'odd' : 'even'}', '${isOdd ? 'odd' : 'even'}', this)">ODD</button>`;
+        html += `<button class="answer-btn" onclick="checkAnswer('${isOdd ? 'even' : 'odd'}', '${isOdd ? 'odd' : 'even'}', this)">EVEN</button>`;
         html += `</div>`;
         container.innerHTML = html;
     }
@@ -714,182 +714,101 @@ function generateUnit7_Sorting(container) {
 }
 
 // ===== UNIT 8: TIME =====
-// Cambridge Workbook Style: Analog Clock with all numbers 1-12
-// Question types: Read clock → digital time, or Digital time → select clock
+// Morning, afternoon, evening; O'Clock
 function generateUnit8_Time(container) {
-    const type = getRandomInt(1, 4);
+    const type = getRandomInt(1, 3);
     
     if (type === 1) {
-        // Read analog clock → select digital time (O'CLOCK only)
-        const hour = getRandomInt(1, 12);
-        const correctTime = `${hour}:00`;
+        // Morning, afternoon, evening
+        const times = [
+            { time: '7:00', period: 'morning', emoji: '🌅' },
+            { time: '12:00', period: 'afternoon', emoji: '☀️' },
+            { time: '6:00', period: 'evening', emoji: '🌙' }
+        ];
+        const target = times[getRandomInt(0, times.length - 1)];
+        const shuffled = shuffleArray([...times]);
         
-        // Generate wrong answers
-        const wrongAnswers = [];
-        while (wrongAnswers.length < 3) {
-            const wrongHour = getRandomInt(1, 12);
-            const wrongTime = `${wrongHour}:00`;
-            if (wrongTime !== correctTime && !wrongAnswers.includes(wrongTime)) {
-                wrongAnswers.push(wrongTime);
-            }
-        }
+        let html = `<p style="text-align: center; margin-bottom: 15px;">${target.time} - Is it morning, afternoon, or evening?</p>`;
+        html += `<div style="font-size: 60px; text-align: center; margin: 15px;">${target.emoji}</div>`;
         
-        const allAnswers = shuffleArray([correctTime, ...wrongAnswers]);
-        
-        let html = `<p style="text-align: center; margin-bottom: 15px; font-size: 1.2rem;">What time is it?</p>`;
-        html += generateSVGClock(hour, 0); // O'clock
-        html += `<p style="text-align: center; margin: 15px 0; color: #666;">Long hand (minute) points to 12<br>Short hand (hour) points to ${hour}</p>`;
         html += `<div class="answer-grid">`;
-        allAnswers.forEach(ans => {
-            html += `<button class="answer-btn" onclick="checkAnswer('${ans}', '${correctTime}', this)" style="font-size: 1.3rem;">${ans}</button>`;
+        shuffled.forEach(t => {
+            html += `<button class="answer-btn" onclick="checkAnswer('${t.period}', '${target.period}', this)">${t.period.toUpperCase()}</button>`;
         });
         html += `</div>`;
         container.innerHTML = html;
         
     } else if (type === 2) {
-        // Read analog clock → select digital time (HALF PAST)
+        // O'Clock time
         const hour = getRandomInt(1, 12);
-        const nextHour = hour === 12 ? 1 : hour + 1;
-        const correctTime = `${hour}:30`;
+        const hourAngle = hour * 30;
         
-        // Generate wrong answers
-        const wrongAnswers = [
-            `${hour}:00`,
-            `${nextHour}:00`,
-            `${hour === 1 ? 12 : hour - 1}:30`
-        ];
-        
-        const allAnswers = shuffleArray([correctTime, ...wrongAnswers]);
-        
-        let html = `<p style="text-align: center; margin-bottom: 15px; font-size: 1.2rem;">What time is it?</p>`;
-        html += generateSVGClock(hour, 30); // Half past
-        html += `<p style="text-align: center; margin: 15px 0; color: #666;">Long hand (minute) points to 6<br>Short hand is between ${hour} and ${nextHour}</p>`;
-        html += `<div class="answer-grid">`;
-        allAnswers.forEach(ans => {
-            html += `<button class="answer-btn" onclick="checkAnswer('${ans}', '${correctTime}', this)" style="font-size: 1.3rem;">${ans}</button>`;
+        let html = `<div class="clock-container">`;
+        html += `<div class="clock-face">`;
+        [12, 3, 6, 9].forEach(num => {
+            const pos = num === 12 ? { top: '10%', left: '50%' } : 
+                        num === 3 ? { top: '50%', right: '10%' } :
+                        num === 6 ? { bottom: '10%', left: '50%' } :
+                        { top: '50%', left: '10%' };
+            html += `<div class="clock-number" style="top:${pos.top};left:${pos.left || 'auto'};right:${pos.right || 'auto'};bottom:${pos.bottom || 'auto'};transform: translate(-50%, -50%);">${num}</div>`;
         });
-        html += `</div>`;
-        container.innerHTML = html;
+        html += `<div class="clock-hand hour" style="transform: rotate(${hourAngle}deg);"></div>`;
+        html += `<div class="clock-hand minute" style="transform: rotate(0deg);"></div>`;
+        html += `<div class="clock-center"></div>`;
+        html += `</div></div>`;
         
-    } else if (type === 3) {
-        // Digital time → select analog clock (O'CLOCK)
-        const targetHour = getRandomInt(1, 12);
-        const correctTime = `${targetHour}:00`;
+        html += `<p style="text-align: center; margin: 20px 0;">What time is it?</p>`;
         
-        // Generate 3 wrong clocks
-        const wrongHours = [];
-        while (wrongHours.length < 3) {
-            const h = getRandomInt(1, 12);
-            if (h !== targetHour && !wrongHours.includes(h)) {
-                wrongHours.push(h);
-            }
-        }
+        const answers = shuffleArray([
+            `${hour}:00`,
+            `${(hour % 12) + 1}:00`,
+            `${hour === 1 ? 12 : hour - 1}:00`,
+            `${(hour % 12) + 2}:00`
+        ]).slice(0, 4);
         
-        const clocks = shuffleArray([
-            { hour: targetHour, minute: 0, correct: true },
-            { hour: wrongHours[0], minute: 0, correct: false },
-            { hour: wrongHours[1], minute: 0, correct: false },
-            { hour: wrongHours[2], minute: 0, correct: false }
-        ]);
-        
-        let html = `<p style="text-align: center; margin-bottom: 15px; font-size: 1.2rem;">Which clock shows <strong>${correctTime}</strong>?</p>`;
-        html += `<p style="text-align: center; margin-bottom: 20px; color: #666;">Find the clock where the short hand points to ${targetHour}</p>`;
-        html += `<div class="clock-selection-grid">`;
-        clocks.forEach((clock, idx) => {
-            html += `<div class="clock-option" onclick="checkAnswer(${clock.correct}, true, this)">`;
-            html += generateSVGClock(clock.hour, clock.minute, 100);
-            html += `</div>`;
+        html += `<div class="answer-grid">`;
+        answers.forEach(ans => {
+            html += `<button class="answer-btn" onclick="checkAnswer('${ans}', '${hour}:00', this)">${ans}</button>`;
         });
         html += `</div>`;
         container.innerHTML = html;
         
     } else {
-        // Digital time → select analog clock (HALF PAST)
-        const targetHour = getRandomInt(1, 12);
-        const nextHour = targetHour === 12 ? 1 : targetHour + 1;
-        const correctTime = `${targetHour}:30`;
+        // Half past
+        const hour = getRandomInt(1, 12);
+        const hourAngle = (hour % 12) * 30 + 15;
+        const timeStr = `${hour}:30`;
         
-        // Generate wrong clocks
-        const wrongClocks = [
-            { hour: targetHour, minute: 0 }, // O'clock instead of half past
-            { hour: nextHour, minute: 30 }, // Wrong hour
-            { hour: targetHour === 1 ? 12 : targetHour - 1, minute: 30 } // Wrong hour
-        ];
+        let html = `<div class="clock-container">`;
+        html += `<div class="clock-face">`;
+        [12, 3, 6, 9].forEach(num => {
+            const pos = num === 12 ? { top: '10%', left: '50%' } : 
+                        num === 3 ? { top: '50%', right: '10%' } :
+                        num === 6 ? { bottom: '10%', left: '50%' } :
+                        { top: '50%', left: '10%' };
+            html += `<div class="clock-number" style="top:${pos.top};left:${pos.left || 'auto'};right:${pos.right || 'auto'};bottom:${pos.bottom || 'auto'};transform: translate(-50%, -50%);">${num}</div>`;
+        });
+        html += `<div class="clock-hand hour" style="transform: rotate(${hourAngle}deg); height: 25%;"></div>`;
+        html += `<div class="clock-hand minute" style="transform: rotate(180deg);"></div>`;
+        html += `<div class="clock-center"></div>`;
+        html += `</div></div>`;
         
-        const clocks = shuffleArray([
-            { hour: targetHour, minute: 30, correct: true },
-            ...wrongClocks.map(c => ({ ...c, correct: false }))
-        ]);
+        html += `<p style="text-align: center; margin: 20px 0;">What time is it?</p>`;
         
-        let html = `<p style="text-align: center; margin-bottom: 15px; font-size: 1.2rem;">Which clock shows <strong>${correctTime}</strong>?</p>`;
-        html += `<p style="text-align: center; margin-bottom: 20px; color: #666;">Long hand should point to 6</p>`;
-        html += `<div class="clock-selection-grid">`;
-        clocks.forEach((clock, idx) => {
-            html += `<div class="clock-option" onclick="checkAnswer(${clock.correct}, true, this)">`;
-            html += generateSVGClock(clock.hour, clock.minute, 100);
-            html += `</div>`;
+        const answers = shuffleArray([
+            `${hour}:30`,
+            `${hour}:00`,
+            `${hour === 1 ? 12 : hour - 1}:30`,
+            `${(hour % 12) + 1}:00`
+        ]).slice(0, 4);
+        
+        html += `<div class="answer-grid">`;
+        answers.forEach(ans => {
+            html += `<button class="answer-btn" onclick="checkAnswer('${ans}', '${timeStr}', this)">${ans}</button>`;
         });
         html += `</div>`;
         container.innerHTML = html;
     }
-}
-
-// Helper function to generate SVG clock with all numbers 1-12
-function generateSVGClock(hour, minute, size = 200) {
-    const cx = size / 2;
-    const cy = size / 2;
-    const radius = size * 0.4;
-    
-    // Calculate hand angles
-    // Hour hand: 30 degrees per hour + 0.5 degrees per minute
-    const hourAngle = (hour % 12) * 30 + (minute / 60) * 30;
-    // Minute hand: 6 degrees per minute
-    const minuteAngle = minute * 6;
-    
-    let svg = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" class="svg-clock" style="display: block; margin: 0 auto;">`;
-    
-    // Clock face background
-    svg += `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="white" stroke="#333" stroke-width="3"/>`;
-    
-    // Hour markers (ticks)
-    for (let i = 0; i < 12; i++) {
-        const angle = i * 30 * Math.PI / 180;
-        const x1 = cx + (radius - 8) * Math.sin(angle);
-        const y1 = cy - (radius - 8) * Math.cos(angle);
-        const x2 = cx + radius * Math.sin(angle);
-        const y2 = cy - radius * Math.cos(angle);
-        svg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#333" stroke-width="2"/>`;
-    }
-    
-    // Numbers 1-12
-    for (let i = 1; i <= 12; i++) {
-        const angle = i * 30 * Math.PI / 180;
-        const numRadius = radius * 0.75;
-        const x = cx + numRadius * Math.sin(angle);
-        const y = cy - numRadius * Math.cos(angle);
-        svg += `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle" font-size="${size * 0.12}" font-weight="bold" fill="#333">${i}</text>`;
-    }
-    
-    // Hour hand (shorter, thicker)
-    const hourRad = (hourAngle - 90) * Math.PI / 180;
-    const hourLength = radius * 0.5;
-    const hourX = cx + hourLength * Math.cos(hourRad);
-    const hourY = cy + hourLength * Math.sin(hourRad);
-    svg += `<line x1="${cx}" y1="${cy}" x2="${hourX}" y2="${hourY}" stroke="#333" stroke-width="4" stroke-linecap="round"/>`;
-    
-    // Minute hand (longer, thinner)
-    const minRad = (minuteAngle - 90) * Math.PI / 180;
-    const minLength = radius * 0.7;
-    const minX = cx + minLength * Math.cos(minRad);
-    const minY = cy + minLength * Math.sin(minRad);
-    svg += `<line x1="${cx}" y1="${cy}" x2="${minX}" y2="${minY}" stroke="#666" stroke-width="3" stroke-linecap="round"/>`;
-    
-    // Center dot
-    svg += `<circle cx="${cx}" cy="${cy}" r="${size * 0.04}" fill="#333"/>`;
-    
-    svg += `</svg>`;
-    
-    return svg;
 }
 
 // ===== UNIT 9: NUMBERS TO 20 =====
@@ -1087,8 +1006,8 @@ function generateUnit13_Numbers20Advanced(container) {
         html += `<p style="text-align: center;">Is this ODD or EVEN?</p>`;
         
         html += `<div class="answer-grid">`;
-        html += `<button class="answer-btn" onclick="checkAnswer('odd', '${isOdd ? 'odd' : 'even'}', this)">ODD</button>`;
-        html += `<button class="answer-btn" onclick="checkAnswer('even', '${isOdd ? 'odd' : 'even'}', this)">EVEN</button>`;
+        html += `<button class="answer-btn" onclick="checkAnswer('${isOdd ? 'odd' : 'even'}', '${isOdd ? 'odd' : 'even'}', this)">ODD</button>`;
+        html += `<button class="answer-btn" onclick="checkAnswer('${isOdd ? 'even' : 'odd'}', '${isOdd ? 'odd' : 'even'}', this)">EVEN</button>`;
         html += `</div>`;
         container.innerHTML = html;
     }
@@ -1128,22 +1047,28 @@ function generateUnit14_Graphs(container) {
 }
 
 // ===== UNIT 15: TIME - HALF PAST =====
-// Uses SVG clock with all 12 numbers (Cambridge Workbook style)
 function generateUnit15_TimeHalf(container) {
     const hour = getRandomInt(1, 12);
     const isHalfPast = Math.random() > 0.5;
+    const minuteAngle = isHalfPast ? 180 : 0;
+    const hourAngle = (hour % 12) * 30 + (isHalfPast ? 15 : 0);
     const timeStr = isHalfPast ? `${hour}:30` : `${hour}:00`;
     
-    let html = `<p style="text-align: center; margin-bottom: 15px; font-size: 1.2rem;">What time is it?</p>`;
-    html += generateSVGClock(hour, isHalfPast ? 30 : 0);
+    let html = `<div class="clock-container">`;
+    html += `<div class="clock-face">`;
+    [12, 3, 6, 9].forEach(num => {
+        const pos = num === 12 ? { top: '10%', left: '50%' } : 
+                    num === 3 ? { top: '50%', right: '10%' } :
+                    num === 6 ? { bottom: '10%', left: '50%' } :
+                    { top: '50%', left: '10%' };
+        html += `<div class="clock-number" style="top:${pos.top};left:${pos.left || 'auto'};right:${pos.right || 'auto'};bottom:${pos.bottom || 'auto'};transform: translate(-50%, -50%);">${num}</div>`;
+    });
+    html += `<div class="clock-hand hour" style="transform: rotate(${hourAngle}deg); height: 25%;"></div>`;
+    html += `<div class="clock-hand minute" style="transform: rotate(${minuteAngle}deg);"></div>`;
+    html += `<div class="clock-center"></div>`;
+    html += `</div></div>`;
     
-    // Add hint text
-    if (isHalfPast) {
-        const nextHour = hour === 12 ? 1 : hour + 1;
-        html += `<p style="text-align: center; margin: 15px 0; color: #666;">Long hand points to 6 (half past)<br>Short hand is between ${hour} and ${nextHour}</p>`;
-    } else {
-        html += `<p style="text-align: center; margin: 15px 0; color: #666;">Long hand points to 12 (o'clock)<br>Short hand points to ${hour}</p>`;
-    }
+    html += `<p style="text-align: center; margin: 20px 0;">What time is it?</p>`;
     
     const answers = shuffleArray([
         timeStr,
@@ -1154,7 +1079,7 @@ function generateUnit15_TimeHalf(container) {
     
     html += `<div class="answer-grid">`;
     answers.forEach(ans => {
-        html += `<button class="answer-btn" onclick="checkAnswer('${ans}', '${timeStr}', this)" style="font-size: 1.3rem;">${ans}</button>`;
+        html += `<button class="answer-btn" onclick="checkAnswer('${ans}', '${timeStr}', this)">${ans}</button>`;
     });
     html += `</div>`;
     container.innerHTML = html;
