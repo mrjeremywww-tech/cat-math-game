@@ -5,7 +5,7 @@ A pixel art cat-themed math game website designed for 7-year-olds! Refer to Camb
 ## Features
 
 - 🎮 **16 Math Units** covering essential math skills for 7-year-olds
-- 🐱 **Pixel Art Cat Mascot** named "Whiskers" with animations
+- 🐱 **Pixel Art Cat Mascot** named "ALAINA" with animations
 - ⭐ **Reward System** with stars and fish treats
 - 🔊 **Sound Effects** (synthesized using Web Audio API)
 - 📱 **Responsive Design** works on all devices
