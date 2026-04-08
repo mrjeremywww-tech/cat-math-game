@@ -1,6 +1,6 @@
 # 🐱 Cat Math Adventure
 
-A pixel art cat-themed math game website designed for 7-year-olds!
+A pixel art cat-themed math game website designed for 7-year-olds! Refer to Cambridge Grade 1 level.
 
 ## Features
 
